@@ -30,8 +30,8 @@
   .collections-page #regular-title {
     letter-spacing: 8px;
     text-transform: uppercase;
-  	color: #ffffff;
-  	font-family: Montserrat,sans-serif;
+    color: #ffffff;
+    font-family: Montserrat,sans-serif;
   }
 
   .collections-page {
@@ -78,7 +78,8 @@
 
 
 <div id="impact-grid-header" class="collections-page">
-  <h1 id="regular-title">Results for "{{ search.terms }}"</h1>
+  {% assign term = search.terms | split: ':' %}
+  <h1 id="regular-title">Results for "{{ term[1] | remove: "*" }}"</h1>
 </div>
 <div id="product-content" class="full-bleed">
   <div class="content">
@@ -117,7 +118,7 @@
                             <a href="{{ item.url }}"><span class="product-name">{{ item.title }}</span></a>
                             <span class="brand">{{ item.vendor }}</span>
                             <span class="price">
-                            	  {% if item.available %}
+                                {% if item.available %}
                                 {% if item.compare_at_price_max > item.price %}
                                 <del>{{ item.compare_at_price | money }}</del>
                                 {% endif %}
