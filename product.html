@@ -100,7 +100,7 @@
             {% for variant in product.variants %}
               {% if variant.inventory_quantity != 0 %}
                   {% if variant.title != 'Default Title' %}
-              	  <option value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_without_currency }} USD</option>
+                  <option value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_without_currency }} USD</option>
                   {% else %}
                   <option value="{{ variant.id }}">{{ product.title }} - {{ variant.price | money_without_currency }} USD</option>
                   {% endif %}
@@ -262,13 +262,13 @@ $('.icon-twitter.social-icons').on('click', function() {
       ga('send', 'event', 'Buy Button', 'click', journalReferrer, product);
     }
 
-	/*var options = {
+  /*var options = {
       mobileStickyHeader: false,
       defaultQuery: "{{ product.vendor }}",
       fullscreenStart: true
     };
     var impactComponent = React.createElement(ImpactGrid, options);
     var mountPoint = document.getElementById('impactgrid');
-	React.render(impactComponent, mountPoint);*/
+  React.render(impactComponent, mountPoint);*/
   });
 </script>
