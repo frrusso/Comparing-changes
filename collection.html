@@ -1,0 +1,465 @@
+<style>
+  .full-bleed > .content {
+    max-width: 968px;
+  }
+
+  #product-content .product-breadcrumbs {
+    margin-bottom: 0px;
+  }
+
+  #flavor-image article.pano-content {
+    height: 360px;
+    min-height: 360px;
+    top: 250px;
+    z-index: 50;
+  }
+
+  .content-grid {
+    max-width: 980px;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 1.4em;
+  }
+
+  #product-content .column:first-child {
+    float: left;
+  }
+
+  #product-content .column.inventory-items {
+    padding-left: 240px;
+  }
+
+  #product-content .sort-collection {
+    width: 240px;
+    margin-bottom: 20px;
+  }
+
+  #product-content .content.collections-content {
+    min-height: 350px;
+    padding-bottom: 60px;
+  }
+
+  #product-content .item.product .product-pic {
+    height: auto;
+  }
+
+  #inventory .item.product {
+    width: 220px;
+  }
+
+  #product-content .category-list {
+    list-style: none;
+    text-align: left;
+    font-size: 16px;
+    line-height: 28px;
+    margin-bottom: 30px;
+    margin-top: 40px;
+    padding-left: 15px;
+  }
+
+  #product-content .filter-type {
+    display: none;
+    margin-top: 20px;
+  }
+
+  #product-content .filter, .browse-tags {
+    list-style: none;
+    text-align: left;
+  }
+
+  #product-content .category-list a {
+    text-decoration: none;
+    position: relative;
+    display: block;
+  }
+
+  #product-content .category-list li:not(.active) a {
+    color: #aa9b8d;
+  }
+
+  #product-content .category-list li:hover a {
+    color: #40c5ce;
+  }
+
+  #product-content .category-list .active a:before {
+    font-family: 'enrouv04';
+    content: '\E81A';
+    position: absolute;
+    left: -20px;
+  }
+
+  .collections-page #regular-title {
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-family: Montserrat,sans-serif;
+  }
+
+  .collections-page {
+    background: #40c5ce;
+  }
+
+  #product-content #collection-description {
+    padding: 25px 15px 35px 15px;
+    border-bottom: 1px solid #dfd7cf;
+    margin-bottom: 10px;
+  }
+
+  #inventory {
+    margin-top: 5px;
+  }
+
+  #go-up {
+    position: fixed;
+    padding: 8px 9px 10px 9px;
+    background: rgba(0,0,0,.5);
+    color: #ffffff;
+    bottom: 15px;
+    right: 15px;
+    z-index: 100;
+    display: none;
+    border-radius: 4px;
+    font-size: 20px;
+  }
+
+  .product .price em {
+    display: inline-block;
+    font-size: 16px;
+    padding-top: 0;
+  }
+
+    .browse-tags select, .filter select {
+      border: 1px solid #ccc;
+      width: 200px;
+      max-width: none;
+      margin: 0 0 20px 0;
+      background-color: #fff;
+      opacity: 0.8;
+      height: 33px;
+      outline: 0;
+      font-size: 14px;
+    }
+
+    @media screen and (max-width: 768px) {
+      #product-content .category-list {
+         display: none;
+      }
+
+      #product-content #go-up {
+        display: none;
+      }
+
+      #product-content .sort-collection {
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      #product-content .browse-tags select, #product-content .filter select {
+        text-align: center;
+        width: 100%;
+      }
+
+      #product-content .column.inventory-items {
+        padding-left: 0px;
+      }
+
+      #product-content li {
+        display: inline-block !important;
+        margin: 0 8px;
+        width: 44%;
+        max-width: 160px;
+      }
+
+      #product-content .filters {
+        margin-top: 25px;
+      }
+
+      #impact-grid-header h1 {
+        font-size: 25px;
+        word-wrap: break-word;
+      }
+
+      .pagination #page-number {
+        display: none;
+      }
+    }
+</style>
+
+<div id="impact-grid-header" class="collections-page">
+  <h1 id="regular-title">{{ collection.title }}</h1>
+</div>
+<a href="#" id="go-up"><i class="icon-up"></i></a>
+<div id="product-content" class="full-bleed">
+  <!-- Begin collection description -->
+  {% if collection.description != "" %}
+  <div id="collection-description">
+    {{ collection.description }}
+  </div>
+  {% endif %}
+  <!-- End collection description -->
+  <div class="content collections-content">
+    <!-- Begin breadcrumbs -->
+        <div class="product-breadcrumbs">
+      <a href="/" title="Home">Home</a> <i class="ui-icon icon-right"></i>
+{% if template contains 'page' %}
+   {{ page.title }}
+ {% elsif template contains 'product' %}
+    {% if collection.url %}
+
+      {{ collection.title | link_to: collection.url }}
+    {% endif %}
+
+    {{ product.title }}
+  {% elsif template contains 'collection' and collection.handle %}
+    {% if current_tags %}
+      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+      {{ collection.title | link_to: url }}<i class="ui-icon icon-right"></i>
+      {{ current_tags | join: " + " | link_to: url | term[1] | remove: "Type:"  }}
+    {% else %}
+      {{ collection.title }}
+    {% endif %}
+ {% else %}
+   {{ page_title }}
+  {% endif %}
+    </div>
+
+    {% paginate collection.products by settings.pagination_limit %}
+    <!-- Begin collection info -->
+    <div class="row">
+      {% assign causes = 'education, human-trafficking, entrepreneurship, environment, global-health, women-empowerment, youth' | split: ',' %}
+      {% for c in causes %}
+      {% assign cause = c | strip %}
+        {% if collection.handle contains cause %}
+          {% assign iscause = true %}
+        {% endif %}
+      {% endfor %}
+      <div class="column with-nav">
+        <!-- Begin sort collection -->
+        <div class="clearfix sort-collection">
+          {% if settings.collection_tags %}
+            {% capture col_url%}{% if collection.url.size == 0 %}/collections/all{%else%}{{collection.url}}{%endif%}{%endcapture%}
+            {% if collection.all_tags.size > 0 %}
+            <!--<p id="refine-search">Refine search</p>-->
+            <ul class="category-list">
+              <li>Shop by Category</li>
+              {% for tag in collection.all_tags %}
+                {% if tag contains 'Type' %}
+                  {% if current_tags contains tag %}
+                    <li class="active"><a href="{{tag | handle}}">{{ tag | remove: 'Type:'}}</a></li>
+                  {% else %}
+                    <li>
+                      {{tag | link_to_tag: tag | remove: 'Type:'}}
+                    </li>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </ul>
+            <ul class="clearfix filters">
+              <li class="clearfix filter filter-type">
+                <select class="coll-filter">
+                  <option value="">All</option>
+                  {% for tag in collection.all_tags %}
+                    {% if tag contains 'Type' %}
+                      {% if current_tags contains tag %}
+                      <option value="{{ tag | handle }}" selected>{{ tag | remove: 'Type:' }}</option>
+                      {% elsif collection.all_tags contains tag %}
+                      <option value="{{ tag | handle }}">{{ tag | remove: 'Type:' }}</option>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </li>
+              <li class="browse-tags">
+                  <select id="sort-by">
+                    <option value="manual">Featured</option>
+                    <option value="price-ascending">Price: Low to High</option>
+                    <option value="price-descending">Price: High to Low</option>
+                    <option value="title-ascending">A-Z</option>
+                    <option value="title-descending">Z-A</option>
+                    <option value="created-ascending">Oldest to Newest</option>
+                    <option value="created-descending">Newest to Oldest</option>
+                    <option value="best-selling">Most Popular</option>
+                  </select>
+              </li>
+              {% if collection.current_vendor == blank %}
+              <li class="clearfix filter">
+                <select onChange="document.location = this.value">
+                  <option value="">All Brands</option>
+                  {% for product_vendor in collection.all_vendors %}
+                    <option value="/collections/vendors?q={{ product_vendor }}">{{ product_vendor }}</option>
+                  {% endfor %}
+                </select>
+              </li>
+              {% endif %}
+              {% if iscause %}
+              {% else if collection.current_vendor %}
+              {% if collection.current_vendor == blank %}
+              <li class="clearfix filter">
+                <select class="coll-filter">
+                  <option value="">All Causes</option>
+                  {% for tag in collection.all_tags %}
+                    {% if tag contains 'Cause' %}
+                      {% if current_tags contains tag %}
+                      <option value="{{ tag | handle }}" selected>{{ tag | remove: 'Cause:' }}</option>
+                      {% elsif collection.all_tags contains tag %}
+                      <option value="{{ tag | handle }}">{{ tag | remove: 'Cause:' }}</option>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </li>
+              {% endif %}
+              {% endif %}
+              {% if !iscause %}
+              <li class="clearfix filter">
+                <select class="coll-filter filter-regions">
+                  <option value="">All Regions</option>
+                  {% for tag in collection.all_tags %}
+                    {% if tag contains 'Region' %}
+                      {% if current_tags contains tag %}
+                      <option value="{{ tag | handle }}" selected>{{ tag  | remove: 'Region:' }}</option>
+                      {% elsif collection.all_tags contains tag %}
+                      <option value="{{ tag | handle }}">{{ tag | remove: 'Region:' }}</option>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </li>
+              {% endif %}
+            </ul>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+        <!-- End sort collection -->
+      <div class="column inventory-items">
+        {% include 'search-bar' %}
+
+          <!-- End collection info -->
+          <div id="inventory" class="span12 content-grid">
+            <!-- Begin no products -->
+            {% if collection.products.size == 0 %}
+            <div class="row">
+              <div class="span12 expanded-message">
+                <p>No products found</p>
+              </div>
+            </div>
+            {% endif %}
+            <div class="row products">
+              {% for product in collection.products limit: settings.pagination_limit %}
+              {% include 'product-loop' with collection.handle %}
+              {% endfor %}
+            </div>
+
+            {% include 'pagination' %}
+
+            {% endpaginate %}
+            <!-- End no products -->
+            
+            <!-- HELLO BAR-->
+            <script src="//my.hellobar.com/206520635bf7656273fc974efe0065111555ec24.js" type="text/javascript" charset="utf-8" async="async"></script>
+          </div>
+        </div>
+  </div>
+</div>
+
+<script>
+  $(window).load(function() {
+    $(window).on('resize.collections', function() {
+      isMobile = window.matchMedia("(max-width: 768px)").matches;
+      var sidebarHeight = $('#product-content .column.with-nav').outerHeight(),
+        div_w = $('.product').width(),
+        div_h = div_w * (330/220);
+
+      $('#product-content .content.collections-content').css('min-height', sidebarHeight);
+      $('#product-content .product-pic').height(div_h);
+      $('#product-content .product-pic img').css('height', '100%').css('width', 'auto');
+    }).trigger('resize.collections');
+  });
+
+  Shopify.queryParams = {};
+  if (location.search.length) {
+    for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+      aKeyValue = aCouples[i].split('=');
+      if (aKeyValue.length > 1) {
+        Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+      }
+    }
+  }
+
+  jQuery('.coll-picker').change(function() {
+    if (jQuery(this).val()) {
+      location.href = '/collections/' + jQuery(this).val();
+    }
+    else {
+      location.href = '/collections/all';
+    }
+  });
+
+  var collFilters = jQuery('.coll-filter');
+    collFilters.change(function() {
+      var categorySelected = jQuery(this).val();
+      ga('send', 'event', 'Collections Dropdown', 'select', categorySelected);
+
+      delete Shopify.queryParams.page;
+      var newTags = [];
+      collFilters.each(function() {
+        if (jQuery(this).val()) {
+          newTags.push(jQuery(this).val());
+        }
+      });
+      if (!isMobile) {
+        var collLists = jQuery('.category-list .active a');
+        newTags.push(collLists.attr('href'));
+      }
+
+      {% if collection.handle %}
+      var newURL = '/collections/{{ collection.handle }}';
+      if (newTags.length) {
+        newURL += '/' + newTags.join('+');
+      }
+      var search = jQuery.param(Shopify.queryParams);
+      if (search.length) {
+        newURL += '?' + search;
+      }
+      location.href = newURL;
+      {% else %}
+      if (newTags.length) {
+        Shopify.queryParams.constraint = newTags.join('+');
+      }
+      else {
+        delete Shopify.queryParams.constraint;
+      }
+      location.search = jQuery.param(Shopify.queryParams);
+      {% endif %}
+    });
+
+  jQuery('#sort-by')
+    .val('{{ collection.sort_by | default: collection.default_sort_by | escape }}')
+    .bind('change', function() {
+      var categorySelected = jQuery(this).val();
+      ga('send', 'event', 'Collections Dropdown', 'select', categorySelected);
+      Shopify.queryParams.sort_by = jQuery(this).val();
+      location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+    });
+
+    $(document).ready(function() {
+      var atTop;
+      $(window).scroll(function(){
+        if($(window).scrollTop() > 5 && atTop){
+          $("#go-up").fadeIn("slow");
+          atTop = false;
+        } else if (!atTop && $(window).scrollTop() <= 5) {
+          $("#go-up").fadeOut("slow");
+          atTop = true;
+        }
+      });
+
+       $("#go-up").click(function(event){
+           event.preventDefault();
+           $("html, body").animate({
+             scrollTop:0
+           },"slow");
+        });
+      });
+</script>
