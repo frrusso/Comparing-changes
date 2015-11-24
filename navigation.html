@@ -1,0 +1,145 @@
+<nav id="mp-menu" class="mp-menu">
+  <div class="mp-level">
+    <h2 class="icon icon-world">Menu</h2>
+    <ul>
+      {% for link in linklists.type.links %}
+      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+      <!--<li class="icon icon-glyph-3">
+        <a class="icon icon-glyph-34" href="#">Shop</a>
+        <div class="mp-level">
+          <h2 class="icon icon-glyph-34">Shop</h2>
+          <a class="mp-back" href="#">back</a>
+          <ul>
+
+            <li class="icon icon-glyph-3">
+              <a class="icon icon-glyph-7" href="#">Featured</a>
+              <div class="mp-level">
+                <h2 class="icon icon-glyph-7">Featured</h2>
+                <a class="mp-back" href="#">back</a>
+                <ul>
+                  {% for link in linklists.featured.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+            <li class="icon icon-glyph-3">
+              <a class="icon icon-glyph-36" href="#">Causes</a>
+              <div class="mp-level">
+                <h2 class="icon icon-glyph-36">Causes</h2>
+                <a class="mp-back" href="#">back</a>
+                <ul>
+                  {% for link in linklists.causes-1.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>-->
+      <li class="icon">
+        <a class="icon icon-glyph-36" href="http://enrou.co/pages/causes">Causes</a>
+      </li>
+      <li class="icon">
+        <a class="icon icon-glyph-28" href="http://enrou.co/pages/brands">Brands</a>
+      </li>
+      <li class="icon">
+        <a class="icon icon-glyph-26" href="http://bit.ly/1c8F7xh" target="_blank">Journal</a>
+        </li>
+      <li class="icon icon-glyph-3">
+        <a class="icon icon-glyph-14" href="#">About</a>
+        <div class="mp-level">
+          <h2 class="icon icon-glyph-14">About</h2>
+          <a class="mp-back" href="#">back</a>
+          <ul>
+            {% for link in linklists.about.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div id="navigation" class="full-bleed white-background">
+	<div class="content">
+      <a href="#" id="trigger" class="menu-trigger"><span class="icon-menu"></span>MENU</a>
+		<div class="leftside">
+			<a class="enrou-logo" href="http://enrou.co" title="Enrou">
+				<img src="https://cdn.shopify.com/s/files/1/0253/6289/files/enroulong_reg.png?10257403238956458733"/>
+			</a>
+		</div>
+		<div class="rightside">
+			<ul>
+				<li><a href="http://enrou.co/collections/all#fullscreen=true&search=home">Shop <span class="icon-down"></span></a>
+					<ul class="sub-menu super-menu white-feathers shadow-box">
+						<div class="menu-links">
+							<div class="row">
+								<div class="column">
+                  <span class="collection-label">{{ linklists.featured.title }}</span>
+                  {% for link in linklists.featured.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+								</div>
+								<div class="column">
+									<span class="collection-label">{{ linklists.type.title }}</span>
+                  {% for link in linklists.type.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+								</div>
+								<div class="column">
+                  <span class="collection-label">{{ linklists.causes-1.title }}</span>
+                  {% for link in linklists.causes-1.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+								</div>
+							</div>
+						</div>
+            <div class="menu-spotlight">
+							<a href="http://enrou.co/collections/30-under-30">
+								<img src="{{ '30x30_campaign_top_nav_header_image_1.jpg' | file_url }}"/>
+							</a>
+						</div>
+					</ul>
+				</li>
+              	<li><a href="http://enrou.co/pages/brands">Impact</a></li>
+				<li><a href="http://enrou.co/pages/causes">Causes</a>
+				</li>
+              	<li><a href="http://bit.ly/1c8F7xh" target="_blank">Journal</a></li>
+				<li>
+                  <a href="#">About <span class="icon-down"></span></a>
+              	  <ul class="sub-menu white-feathers shadow-box about">
+                        {% for link in linklists.about.links %}
+                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                        {% endfor %}
+					</ul>
+              	</li>
+
+				<li class="shop"><a href="/cart"><i class="ui-icon icon-shop"></i><span class="quantity">({{ cart.item_count }})</span></a></li>
+			</ul>
+		</div>
+      	<div style="clear: both;"></div>
+	</div>
+</div>
+<div class="full-bleed home-banner">
+	<div class="content light-text">
+    <ul id="main-links">
+      <li>
+        <form method="get" action="/search" id="search-home">
+            <button type="submit" value="search"></button>
+            <input type="hidden" name="type" value="product" />
+            <input type="text" name="q" placeholder="Search" />
+        </form>
+      </li>
+      {% for link in linklists.type.links %}
+      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+	</div>
+</div>
+
+<div class="scroller">
+  <div class="scroller-inner">
