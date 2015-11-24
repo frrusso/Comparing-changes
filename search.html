@@ -1,0 +1,153 @@
+<style>
+  .full-bleed > .content {
+    max-width: 970px;
+  }
+
+  #product-content .product-pic {
+    height: 330px;
+    overflow: hidden;
+  }
+
+  #flavor-image article.pano-content {
+    height: 360px;
+    min-height: 360px;
+    top: 250px;
+    z-index: 50;
+  }
+
+  .content-grid {
+    max-width: 980px;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 1.4em;
+  }
+
+  #product-content .content {
+    min-height: 350px;
+    padding-bottom: 60px;
+  }
+
+  .collections-page #regular-title {
+    letter-spacing: 8px;
+    text-transform: uppercase;
+  	color: #ffffff;
+  	font-family: Montserrat,sans-serif;
+  }
+
+  .collections-page {
+    background: #40c5ce;
+  }
+
+  @media screen and (max-width: 768px) {
+
+    #impact-grid-header h1 {
+      font-size: 25px;
+    }
+  }
+
+  .product .price em {
+    display: inline-block;
+    font-size: 16px;
+    padding-top: 0;
+  }
+
+    .product-pic img {
+      height: 100%;
+      width: auto;
+      position: absolute;
+    }
+
+    #inventory {
+      clear: both;
+      padding-top: 25px;
+    }
+
+    #inventory .expanded-message {
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    #inventory .item.product {
+      width: 220px;
+    }
+
+    #impact-grid-header h1 {
+      max-width: 1000px;
+    }
+</style>
+
+
+<div id="impact-grid-header" class="collections-page">
+  <h1 id="regular-title">Results for "{{ search.terms }}"</h1>
+</div>
+<div id="product-content" class="full-bleed">
+  <div class="content">
+    {% paginate search.results by 20 %}
+    <!-- Begin collection info -->
+    <div class="row">
+        <!-- End sort collection -->
+      <div class="column inventory-items">
+        {% include 'search-bar' %}
+          <div id="inventory" class="span12 content-grid">
+            <!-- Begin no products -->
+            {% if search.results.size == 0 %}
+            <div class="row">
+              <div class="span12 expanded-message">
+                <p>That's a great idea but unfortunately we don't have "{{ search.terms }}".<br/>Try again?</p>
+              </div>
+            </div>
+            {% endif %}
+            <div class="row products">
+              {% for item in search.results limit: settings.pagination_limit %}
+                  {% if item.variants.first.inventory_quantity > 0 %}
+                  <div class="item product" data-tags="{% for tag in item.tags %}{{ tag | downcase }}, {% endfor %}">
+                      <a href="{{ item.url }}">
+                          <div class="product-pic">
+                            <div class="inner-pic">
+                              <img src="{{ item.featured_image | product_img_url: 'large' }}" alt="{{ item.title | escape  }}"/>
+                            </div>
+                            <!-- Box that appears upon hover -->
+                            <div class="view-product bg-black">
+                              <i class="icon-search"></i>
+                              <span>View</span>
+                            </div>
+                          </div>
+                        </a>
+                          <div class="description">
+                            <a href="{{ item.url }}"><span class="product-name">{{ item.title }}</span></a>
+                            <span class="brand">{{ item.vendor }}</span>
+                            <span class="price">
+                            	  {% if item.available %}
+                                {% if item.compare_at_price_max > item.price %}
+                                <del>{{ item.compare_at_price | money }}</del>
+                                {% endif %}
+                                {% if item.price_varies %}
+                                <em>from</em>
+                                {% endif %}
+                                <span>{{ item.price | money }}</span>
+                                {% else %}
+                                <span>
+                                  {{ item.price | money }} Sold Out
+                                </span>
+                                {% endif %}
+                            </span>
+                            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+                          </div>
+                  </div>
+                  {% endif %}
+              {% endfor %}
+            </div>
+
+            {% include 'pagination' %}
+            {% endpaginate %}
+            <!-- End no products -->
+          </div>
+        </div>
+  </div>
+</div>
+
+<!-- Custom impact grid code -->
+<!--<script type="text/javascript"> document.addEventHandler('DOMContentLoaded',function(){
+varoptions ={mobileStickyHeader:false,defaultQuery:""}; varimpactComponent=React.createElement(ImpactGrid,options); varmountPoint =document.getElementById('impactgrid');
+React.render(impactComponent,mountPoint); });
+</script>-->
