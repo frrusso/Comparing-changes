@@ -1,0 +1,274 @@
+<style>
+  #product-content .inventory {
+    width: 100%;
+  }
+
+  #add-form #quantity-label {
+    display: inline-block;
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  #add-form #qty-select {
+    display: block;
+    margin-top: 25px;
+  }
+
+  #out-of-stock {
+    font-style: italic;
+    color: #c34138;
+    margin-top: 0;
+  }
+</style>
+
+<script>
+  window.thisBrand = "{{ product.vendor }}";
+  //getSpreadsheetData(artisanId, thisBrand);
+
+  //getSpreadsheetData(brandId, thisBrand);
+</script>
+
+<!-- BEGIN: New -->
+<div id="product-content" class="full-bleed">
+  <div class="content">
+    <div class="two-columns">
+      <div class="col-1">
+        <span class="product-breadcrumbs">
+          <a href="{{ shop.url }}" title="{{ shop.name }}" itemprop="url">Home</a> <i class="ui-icon icon-right"></i>
+          {% if collection %}
+          <a href="{{ collection.url }}" title="{{ collection.title}}" itemprop="url">
+            {{ collection.title }}
+          </a>
+          {% else %}
+          <a href="/collections/all" title="All Products" itemprop="url">Products</a>
+          {% endif %} <i class="ui-icon icon-right"></i>
+          {{ product.title }}
+        </span>
+        <div class="product-image" style="margin-bottom: 20px;">
+          <img src="{{ product.featured_image | product_img_url: 'original' }}"/>
+          <div id="social-container">
+            <a href="http://pinterest.com/pin/create/button/?url={{ product.url }}&amp;media={{ product.featured_image | product_img_url: 'large' }}&amp;description={{ product.title }}" class="icon-pinterest social-icons" target="_blank"></a>
+            <a href="{{ product.url }}" data-image="http:{{ product.featured_image | product_img_url: 'medium' }}" data-title="{{ product.title }}" class="icon-facebook social-icons"></a>
+            <a href="https://twitter.com/intent/tweet?url={{ product.url }}&amp;text={{ product.title }}&amp;via=enrou_" class="icon-twitter social-icons"></a>
+          </div>
+        </div>
+        <span class="zoom-instructions" style="display: none;"><i class="ui-icons icon-zoom-in"></i> Rollover to zoom</span>
+        {% for image in product.images limit: 8 %}
+        <img class="product-image-thumb" src="{{ image | product_img_url: 'original' }}" alt="{{ image.alt | escape }}"/>
+        {% endfor %}
+      </div>
+      <div class="col-2">
+        <h1>{{ product.title }}</h1>
+        <span class="icon-enrou-unique-item ui-icon"></span>
+        <span class="brand-name">{{ product.vendor }}</span>
+        <span class="product-price">{{ product.price_min | money_without_currency }} USD</span>
+         {% assign num = 0 %}
+        {% for variant in product.variants %}
+          {% if variant.inventory_quantity > 0 %}
+          {% assign num = variant.inventory_quantity %}
+          {% endif %}
+        {% endfor %}
+
+        {% if num == 0 and variant.inventory_management != '' %}
+        <p id="out-of-stock">Out of Stock</p>
+        {% else %}
+        <form action="/cart/add" id="add-form">
+          <div id="qty-select">
+            <label for="quantity-field" id="quantity-label">QTY:</label>
+            <select name="quantity" id="quantity-field">
+              {% assign number = 100 %}
+                {% for variant in product.variants %}
+       
+                  {% if variant.inventory_quantity < number and variant.inventory_quantity > 0 %}
+                    {% assign number = variant.inventory_quantity %}
+                    {% if product.title contains "Gift Card" %}
+                      {% assign number = 10 %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+
+                {% for i in (1..number) %}
+                  {% if i <= 20 %}
+                    <option value="{{ i }}">{{ i }}</option>
+                  {% endif %}
+                {% endfor %}
+
+            </select>
+          </div>
+          <div class="product-sizes">
+          <select name="id">
+            {% for variant in product.variants %}
+              {% if variant.inventory_quantity != 0 %}
+                  {% if variant.title != 'Default Title' %}
+              	  <option value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_without_currency }} USD</option>
+                  {% else %}
+                  <option value="{{ variant.id }}">{{ product.title }} - {{ variant.price | money_without_currency }} USD</option>
+                  {% endif %}
+                {% endif %}
+            {% endfor %}
+          </select>
+          </div>
+          <input type="submit"
+                 class="add-to-bag button primary filled"
+                 value="Add to Bag">
+        </form>
+        <div id="persuasive-guarantee">Free shipping on U.S. orders of $75+ & Free returns</div>
+        {% endif %}
+
+        <!-- BEGIN: Featured Artisan -->
+        <div id="artisan-story" name="{{ product.vendor | downcase | replace: ' ', '-' }}">
+          <div class="avatar-container">
+            <img class="avatar-image" />
+          </div>
+          <div class="story-details">
+            <span class="creator-label">Creator Name</span>
+            <span class="creator-name">Dalaj</span>
+            <em>"This opportunity is helping me to stand on my own feet and teaching me to trust others again. I have hope for the first time in years."</em>
+          </div>
+        </div>
+        <!-- END: Featured Artisan -->
+
+        <!-- BEGIN: Additional Product Info -->
+        <div id="more-product-info">
+          <div class="product-details">Product Details <i class="ui-icon icon-down"></i></div>
+          <div class="about-the-brand">About the Brand <i class="ui-icon icon-down"></i></div>
+        </div>
+        <div class="more-product-info-stage">
+          <div id="product-desc">{{ product.description }}</div>
+        </div>
+        <!-- END: Additional Product Info -->
+        <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+      </div>
+    </div>
+
+    {% include 'related-products' %}
+
+    <!-- BEGIN: Product Impact -->
+    <div id="product-impact">
+      <h2>Your Purchase. Boundless Impact.</h2>
+      <span class="caption">See how your purchase strengthens the Punjammies community in India.</span>
+      <div class="column col-1">
+        <img/>
+        <span class="subheader">How It's Made</span>
+        <p>46 hours poured in to your product, providing work to 155 women.</p>
+      </div>
+      <div class="column col-2">
+        <img/>
+        <span class="subheader">Where It Goes</span>
+        <p>Your purchase provides microfinance loans and education funding to local women in India that work alongside Punjammies.</p>
+      </div>
+      <!-- FONTELLO ICONS: https://www.dropbox.com/s/hx2yyq6wn060e6g/fontello-526d2353.zip?dl=0 -->
+      <div class="column col-3">
+        <img/>
+        <span class="subheader">Discover Causes</span>
+        <ul>
+          {% for tag in product.tags %}
+            {% if tag contains 'Cause' %}
+              {% assign c = tag | remove: "Cause:" | downcase | replace: ' ', '-' %}
+              {% if c == "women's-empowerment" %}
+                {% assign e = 'women-empowerment' %}
+              {% else %}
+                {% assign e = c %}
+              {% endif %}
+              <li><i class="ui-icons icon-{{ e }}_brown"></i><a href="/pages/causes#{{ e  }}">{{ tag | remove: 'Cause:' }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Brand Data hidden html -->
+<div id="brand-data">
+  {% for collection in collections %}
+    {% if collection.metafields.c_f.collection_type == 'brand' %}
+      {% if collection.title | downcase == product.vendor | downcase %}
+      <div id="{{ collection.handle | replace: '.', '' | replace: '&', '' }}-data">
+        {% for field in collection.metafields.c_f %}
+          <span class="{{field | first}}" id='{{field | last}}'></span>
+        {% endfor %}
+        <span class="artisan_caption" id='{{collection.metafields.c_f.artisan_caption}}'></span>
+      </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+<!-- END: New -->
+<!-- Custom impact grid code -->
+<script>
+/* Add correct data to FB share
+ *******************************************/
+window.fbAsyncInit = function() {
+    FB.init({
+        appId: '333273200145421',
+        status: true,
+        cookie: true,
+        xfbml: true
+    });
+};
+(function(d, debug){var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];if   (d.getElementById(id)) {return;}js = d.createElement('script'); js.id = id; js.async = true;js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";ref.parentNode.insertBefore(js, ref);}(document, /*debug*/ false));
+
+function postToFeed(title, url, image) {
+    var obj = {method: 'feed',link: url, picture: image,name: title};
+    function callback(response) {}
+    FB.ui(obj, callback);
+}
+
+
+$('.icon-facebook.social-icons').click(function() {
+    elem = $(this);
+  //  _gaq.push(['_trackEvent', 'Social buttons', 'click', 'Facebook Share']);
+    postToFeed(elem.data('title'), elem.prop('href'), elem.data('image'));
+
+    return false;
+});
+
+$('.icon-twitter.social-icons').on('click', function() {
+    //_gaq.push(['_trackEvent', 'Social buttons', 'click', 'Twitter Share']);
+    window.open(this.href, '', 'menubar=no,toolbar=no,resizable=no,scrollbars=no,height=400,width=600');
+    return false;
+});
+</script>
+
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    $(window).load(function() {
+
+      $(window).on('resize.products', function() {
+        isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+        var div_w = $('.product').width();
+        var div_h = div_w * (330/220);
+
+        $('#product-content .product-pic').height(div_h);
+
+        $('#product-content .product-pic img').css('height', '100%');
+
+      }).trigger('resize.products');
+    });
+
+    var url = document.location.search;
+    try{
+        journalReferrer = url.match(/channel=buy_button&referer=([^&]+)/)[1];
+    } catch(e){
+        journalReferrer = 0;
+    }
+
+    if (journalReferrer) {
+      var product = $('h1').text() || 'Unknown Product';
+      journalReferrer = decodeURIComponent(journalReferrer);
+      ga('send', 'event', 'Buy Button', 'click', journalReferrer, product);
+    }
+
+	/*var options = {
+      mobileStickyHeader: false,
+      defaultQuery: "{{ product.vendor }}",
+      fullscreenStart: true
+    };
+    var impactComponent = React.createElement(ImpactGrid, options);
+    var mountPoint = document.getElementById('impactgrid');
+	React.render(impactComponent, mountPoint);*/
+  });
+</script>
