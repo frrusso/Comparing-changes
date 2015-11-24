@@ -1,0 +1,186 @@
+<!-- BEGIN: Homepage content. -->
+<script>console.log('br%include "featured-products" %br and popular');</script>
+
+  {% include 'pano-countdown' %}
+
+<div id="main-content">
+  <!-- <div id="split-screen" class="full-bleed">
+    <div class="content">
+      <h3 class="variation">Create opportunity with every purchase</h3>
+      <a class="button primary transparent" href="http://bit.ly/1g91V1w" target="_blank" id="discover-btn">Discover More</a>
+      <a href="http://enrou.co/collections/all?sort_by=best-selling#fullscreen=true&search=home" class="button primary filled margin-top" id="split-shop-now">Shop Now</a><br/>
+      <i class="ui-icon icon-double-down"></i>
+    </div>
+    <div class="left-target"></div>
+    <div class="right-target"></div>
+    <div id="product-wrapper">
+    	<div class="product-screen"></div>
+    </div>
+    <div class="dark-screen"></div>
+  </div> -->
+  <div id="split-screen" class="full-bleed">
+    <div id="left-side" class="screen-images">
+      <div class="btn-wrapper">
+        <a class="button primary transparent" href="http://bit.ly/1DQe8xt" id="discover-btn">Learn More</a>
+      </div>
+    </div>
+    <div id="product-wrapper" class="screen-images">
+      <div class="btn-wrapper" id="second-wrapper">
+        <a href="http://enrou.co/collections/all#fullscreen=true&search=home" class="button primary filled margin-top" id="split-shop-now">Shop Now</a>
+      </div>
+      <div class="dark-screen"></div>
+    </div>
+    <div class="content">
+      <h3 class="variation">Every Purchase Creates Opportunity</h3>
+    </div>
+    <i class="ui-icon icon-double-down"></i>
+  </div>
+<a name="who-we-are" id="who-we-are"></a>
+  <div id="new-marketplace" class="white-feathers full-bleed">
+    <div class="content">
+      <h3 class="variation">Your Purchase Makes an Impact</h3>
+      <h3 class="variation second-step" style="margin-bottom: 50px;"></h3>
+      <div class="statistic" style="vertical-align:top">
+        <img src="{{ 'icon-enrou-brands.png' | file_url }}" alt="shop socially conscious enrou"/>
+        <h3 class="variation">Shop Enrou</h3>
+      </div>
+      <div class="statistic" style="vertical-align:top">
+        <img src="{{ 'icon-employed.png' | file_url }}" alt="create jobs"/>
+        <h3 class="variation">Create Jobs</h3>
+      </div>
+      <div class="statistic" style="vertical-align:top">
+        <img src="{{ 'icon-communities.png' | file_url }}" alt="invest in communities"/>
+        <h3 class="variation">Invest in <br> communities</h3>
+      </div>
+    </div>
+    <a href="http://enrou.co/collections/all?sort_by=best-selling#fullscreen=true&search=home" class="button primary filled" id="stats-shop-now">Shop Now</a>
+  </div>
+  <div id="impact-bar" class="full-bleed light-text teal-background">
+    <div class="content">
+      <em>We're enroute to a better world.</em>
+    </div>
+  </div>
+  <div id="sneak-peek">
+    <div class="content">
+      <h3 class="variation">Discover</h3>
+      <p class="h1-size">Our Favorites</p>
+      {% for product in collections.frontpage.products limit: 4 %}
+      <a href="{{ product.url }}" class="product">
+        <div class="product-pic">
+          <img src="{{ product.featured_image | product_img_url: 'large' }}" alt="{{ product.title | escape  }}" />
+          <div class="view-product bg-black">
+            <i class="icon-search"></i>
+            <span>View</span>
+          </div>
+        </div>
+        <span class="product-name">{{ product.title }}</span>
+        <span class="brand">{{ product.vendor }}</span>
+        <span class="price">
+          {% if product.available %}
+            {% if product.compare_at_price_max > product.price %}
+            <del>{{ product.compare_at_price | money_without_currency }} USD</del>
+            {% endif %}
+            {% if product.price_varies %}
+            <small><em>from</em></small>
+            {% endif %}
+          {{ product.price | money_without_currency }} USD
+          {% else %}
+            {{ product.price | money_without_currency }} USD Sold Out
+          {% endif %}
+        </span>
+      </a>
+      {% endfor %}
+      <br/>
+      <a href="http://enrou.co/collections/all?sort_by=best-selling#fullscreen=true&search=home" class="button primary filled" id="bottom-shop-now">Shop All</a>
+    </div>
+  </div>
+  <div id="featured-product" class="full-bleed" style="background-image:url({{ 'IMG_2305_1.jpg' | file_url }})">
+    <h2 id="product-description"><span id="the"></span><span id="new-arrivals"><font color="#40c5ce"><br>COZY UP TO<br> NEW ARRIVALS</font></span></h2>
+    <div class="content light-text">
+      <a href="http://journal.enrou.co/meet-juana" class="button secondary">Meet an Artisan</a>
+      <a href="http://enrou.co/collections/new-arrivals" class="button primary yellow" id="campaign-shop-now">Shop New Arrivals</a></div>
+    </div>
+  </div>
+  <div name="impact-grid" href="#" id="impact-grid"></div>
+  <div id="impact-grid-header">
+    <h3>Discover Enrou</h3>
+    <em class="second-step">Explore products. Discover causes. Shop differently.</em>
+  </div>
+<!-- END: Homepage content. -->
+
+<script>
+var docCookies = {
+  getItem: function (sKey) {
+    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+  },
+  setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) {         return false;
+    }
+    var sExpires = "";
+  if (vEnd) {
+    switch (vEnd.constructor) {
+      case Number:
+      sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+      break;
+      case String:
+      sExpires = "; expires=" + vEnd;
+      break;
+      case Date:
+      sExpires = "; expires=" + vEnd.toUTCString();
+      break;
+    }
+  }
+  document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+    return true;
+  },
+  removeItem: function (sKey, sPath, sDomain) {
+    if (!sKey || !this.hasItem(sKey)) { return false; }
+    document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + ( sDomain ? "; domain=" + sDomain : "") + ( sPath ? "; path=" + sPath : "");
+    return true;
+  },
+  hasItem: function (sKey) {
+    return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+  },
+  keys: /* optional method: you can safely remove it! */ function () {
+  var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+  for (var nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] =   decodeURIComponent(aKeys[nIdx]); }
+    return aKeys;
+  }
+};
+
+if (docCookies.hasItem('enrou-snickerdoodle-cookie')) {
+  $('#countdown-pano').css('display', 'none');
+  $('#split-screen').css('display', 'block');
+} else {
+  docCookies.setItem('enrou-snickerdoodle-cookie', 'Welcome to Enrou!', 60*60*24*14);
+}
+
+// Facebook Pixel CompleteRegistration
+// Track when a registration form is completed (ex. complete subscription, sign up for a service)
+fbq('track', 'CompleteRegistration');
+
+$(window).load(function() {
+  $(window).on('resize.collections', function() {
+    isMobile = window.matchMedia("(max-width: 768px)").matches;
+    var div_w = $('.product').width();
+    var div_h = div_w * (330/220);
+
+    $('.product .product-pic').height(div_h);
+
+    setTimeout(function() {
+      var productImages = $('.product .product-pic img');
+      productImages.each(function() {
+        var w = div_w;
+
+        if (w != div_w) {
+          //set img position
+          this.style.left = '50%';
+          var marginLeft = -Math.round(w/2);
+          $(this).css('margin-left', marginLeft);
+        }
+      })
+    }, 100);
+  }).trigger('resize.collections');
+});
+
+</script>
